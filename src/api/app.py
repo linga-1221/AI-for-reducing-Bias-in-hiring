@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import json
-from pdf_handler import extract_text_from_pdf
+from src.processing.pdf_handler import extract_text_from_pdf
+#from pdf_handler import extract_text_from_pdf
 from main import anonymize_resume, analyze_job_description, generate_suggestions
 from job_roles import job_roles
 
