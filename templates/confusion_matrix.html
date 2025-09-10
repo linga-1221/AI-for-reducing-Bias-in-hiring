@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confusion Matrix - Bias Detection Performance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/confusion_matrix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Main App</a>
+        <h1>🎯 Bias Detection Performance Analysis</h1>
+        
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(matrix_data.metrics.accuracy * 100) }}%</div>
+                <div class="metric-label">Accuracy</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(matrix_data.metrics.precision * 100) }}%</div>
+                <div class="metric-label">Precision</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.1f"|format(matrix_data.metrics.recall * 100) }}%</div>
+                <div class="metric-label">Recall</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">{{ "%.3f"|format(matrix_data.metrics.f1_score) }}</div>
+                <div class="metric-label">F1-Score</div>
+            </div>
+        </div>
+        
+        <h2>📊 Confusion Matrix</h2>
+        <table class="matrix-table">
+            <tr>
+                <th rowspan="2">Actual</th>
+                <th colspan="2">Predicted</th>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <th>Clean</th>
+                <th>Biased</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Clean</th>
+                <td class="tn">{{ matrix_data.matrix.true_negative }}</td>
+                <td class="fp">{{ matrix_data.matrix.false_positive }}</td>
+                <td>{{ matrix_data.matrix.true_negative + matrix_data.matrix.false_positive }}</td>
+            </tr>
+            <tr>
+                <th>Biased</th>
+                <td class="fn">{{ matrix_data.matrix.false_negative }}</td>
+                <td class="tp">{{ matrix_data.matrix.true_positive }}</td>
+                <td>{{ matrix_data.matrix.false_negative + matrix_data.matrix.true_positive }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ matrix_data.matrix.true_negative + matrix_data.matrix.false_negative }}</td>
+                <td>{{ matrix_data.matrix.false_positive + matrix_data.matrix.true_positive }}</td>
+                <td>{{ matrix_data.results|length }}</td>
+            </tr>
+        </table>
+        
+        <div class="matrix-explanation">
+            <div class="tp">
+                <strong>True Positive ({{ matrix_data.matrix.true_positive }})</strong><br>
+                Correctly identified bias
+            </div>
+            <div class="tn">
+                <strong>True Negative ({{ matrix_data.matrix.true_negative }})</strong><br>
+                Correctly identified clean
+            </div>
+            <div class="fp">
+                <strong>False Positive ({{ matrix_data.matrix.false_positive }})</strong><br>
+                Incorrectly flagged as biased
+            </div>
+            <div class="fn">
+                <strong>False Negative ({{ matrix_data.matrix.false_negative }})</strong><br>
+                Missed actual bias
+            </div>
+        </div>
+        
+        <h2>📋 Detailed Test Results</h2>
+        <table class="results-table">
+            <tr>
+                <th>Status</th>
+                <th>Predicted</th>
+                <th>Actual</th>
+                <th>Job Description</th>
+            </tr>
+            {% for result in matrix_data.results %}
+            <tr class="{{ result.status }}">
+                <td>{{ "✅" if result.status == "correct" else "❌" }}</td>
+                <td>{{ result.predicted }}</td>
+                <td>{{ result.actual }}</td>
+                <td>{{ result.description }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
