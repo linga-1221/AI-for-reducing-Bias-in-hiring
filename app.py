@@ -376,5 +376,6 @@ def upload_resume():
         return jsonify({'error': f'Server error: {str(e)}'})
 
 if __name__ == '__main__':
-    print("Starting AI Resume Bias Detector...")
-    app.run(debug=True, host='127.0.0.1', port=5003)
+    import os
+    port = int(os.environ.get('PORT', 5003))
+    app.run(debug=False, host='0.0.0.0', port=port)
